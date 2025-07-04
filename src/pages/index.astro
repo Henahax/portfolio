@@ -1,7 +1,6 @@
 ---
 import "../styles/global.css";
 import BusinessCard from "../components/BusinessCard.astro";
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
@@ -9,7 +8,19 @@ import Layout from "../layouts/Layout.astro";
 ---
 
 <Layout>
-  <Welcome />
-
-  <BusinessCard />
+  <div
+    class="flex items-center justify-center h-screen gap-4 max-sm:flex-col gap-16 sm:gap-32"
+  >
+    <section>
+      <BusinessCard />
+    </section>
+    <section class="bg-blue-100">
+      <div class="grid">
+        <div>1</div>
+        <div>2</div>
+        <div>3</div>
+        <div>4</div>
+      </div>
+    </section>
+  </div>
 </Layout>

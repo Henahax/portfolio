@@ -1,12 +1,110 @@
-<div class="max-w-2xl bg-red-500 rounded-xl p-4 flex gap-4 aspect-[175/100]">
-  <div class="flex flex-col">
-    <div>Bild</div>
-    <div class="font-bold text-xl">Name</div>
-  </div>
-  <div>
-    <ul>
-      <li>mail</li>
-      <li>linkedin</li>
-    </ul>
+---
+const firstName = import.meta.env.FIRST_NAME || "FirstName";
+const lastName = import.meta.env.LAST_NAME || "LastName";
+const title = import.meta.env.TITLE || "Title";
+const company = import.meta.env.COMPANY || "Company";
+const email = import.meta.env.EMAIL || "EMail";
+---
+
+<div class="card max-w-2xl bg-red-500 flex rounded-xl p-8 w-full">
+  <div class="glow"></div>
+  <div class="flex gap-8 w-full self-center">
+    <div class="flex flex-col">
+      <div>Bild</div>
+      <div>{firstName} {lastName}</div>
+      <div class="text-sm">{title}</div>
+      <div class="text-xs">{company}</div>
+    </div>
+    <div class="text-sm">
+      <ul class="flex flex-col gap-2">
+        <li><a href={"mailto:" + email}>{email}</a></li>
+        <li>linkedin</li>
+      </ul>
+    </div>
   </div>
 </div>
+
+<script>
+  const $card = document.querySelector(".card");
+  let bounds: any;
+
+  function rotateToMouse(e: { clientX: any; clientY: any }) {
+    if (!$card) return;
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+    const leftX = mouseX - bounds.x;
+    const topY = mouseY - bounds.y;
+    const center = {
+      x: leftX - bounds.width / 2,
+      y: topY - bounds.height / 2,
+    };
+
+    const distance = Math.sqrt(center.x ** 2 + center.y ** 2);
+
+    ($card as HTMLElement).style.transform = `
+    scale3d(1.05, 1.05, 1.05)
+    rotate3d(
+      ${center.y / 100},
+      ${-center.x / 100},
+      0,
+      ${Math.log(distance) * 3}deg
+    )
+  `;
+
+    const glow = $card.querySelector(".glow");
+    if (glow) {
+      (glow as HTMLElement).style.backgroundImage = `
+      radial-gradient(
+        circle at
+        ${center.x * 2 + bounds.width / 2}px
+        ${center.y * 2 + bounds.height / 2}px,
+        #ffffff55,
+        #0000000f
+      )
+    `;
+    }
+  }
+
+  if ($card) {
+    $card.addEventListener("mouseenter", () => {
+      bounds = $card.getBoundingClientRect();
+      document.addEventListener("mousemove", rotateToMouse);
+    });
+
+    $card.addEventListener("mouseleave", () => {
+      document.removeEventListener("mousemove", rotateToMouse);
+      ($card as HTMLElement).style.transform = "";
+      ($card as HTMLElement).style.background = "";
+    });
+  }
+</script>
+
+<style>
+  .card {
+    background-size: cover;
+
+    position: relative;
+
+    transition-duration: 300ms;
+    transition-property: transform, box-shadow;
+    transition-timing-function: ease-out;
+    transform: rotate3d(0);
+
+    box-shadow: 0 1px 5px #00000099;
+  }
+
+  .card:hover {
+    transition-duration: 150ms;
+    box-shadow: 0 5px 20px 5px #00000044;
+  }
+
+  .card .glow {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+
+    background-image: radial-gradient(circle at 50% -20%, #ffffff22, #0000000f);
+  }
+</style>
