@@ -1,24 +1,60 @@
 ---
-const firstName = import.meta.env.FIRST_NAME || "FirstName";
-const lastName = import.meta.env.LAST_NAME || "LastName";
-const title = import.meta.env.TITLE || "Title";
-const company = import.meta.env.COMPANY || "Company";
-const email = import.meta.env.EMAIL || "EMail";
+const firstName = import.meta.env.FIRST_NAME;
+const lastName = import.meta.env.LAST_NAME;
+const title = import.meta.env.TITLE;
+const company = import.meta.env.COMPANY;
+const email = import.meta.env.EMAIL;
+const linkedin = import.meta.env.LINKEDIN;
+const xing = import.meta.env.XING;
+
+let links = [];
+
+if (email) {
+  links.push({
+    name: email,
+    icon: "fa-solid fa-envelope",
+    url: "mailto:" + email,
+  });
+}
+
+if (linkedin) {
+  links.push({
+    name: "LinkedIn",
+    icon: "fa-brands fa-linkedin",
+    url: linkedin,
+  });
+}
+
+if (xing) {
+  links.push({
+    name: "Xing",
+    icon: "fa-brands fa-xing",
+    url: xing,
+  });
+}
 ---
 
-<div class="card max-w-2xl bg-red-500 flex rounded-xl p-8 w-full">
+<div class="card max-w-2xl bg-red-500 flex rounded-xl p-4 w-full">
   <div class="glow"></div>
   <div class="flex gap-8 w-full self-center">
     <div class="flex flex-col">
       <div>Bild</div>
       <div>{firstName} {lastName}</div>
-      <div class="text-sm">{title}</div>
-      <div class="text-xs">{company}</div>
+      <div>{title}</div>
+      <div>{company}</div>
     </div>
-    <div class="text-sm">
-      <ul class="flex flex-col gap-2">
-        <li><a href={"mailto:" + email}>{email}</a></li>
-        <li>linkedin</li>
+    <div class="links">
+      <ul class="grid grid-cols-[auto, 1fr] gap-1">
+        {
+          links.map((link) => (
+            <li class="grid grid-cols-subgrid col-span-2 items-center">
+              <i class={link.icon} />
+              <a href={link.url} target="_blank" rel="noopener noreferrer">
+                {link.name}
+              </a>
+            </li>
+          ))
+        }
       </ul>
     </div>
   </div>
@@ -47,7 +83,7 @@ const email = import.meta.env.EMAIL || "EMail";
       ${center.y / 100},
       ${-center.x / 100},
       0,
-      ${Math.log(distance) * 3}deg
+      ${Math.log(distance) * 2}deg
     )
   `;
 
@@ -104,7 +140,7 @@ const email = import.meta.env.EMAIL || "EMail";
     height: 100%;
     left: 0;
     top: 0;
-
+    pointer-events: none;
     background-image: radial-gradient(circle at 50% -20%, #ffffff22, #0000000f);
   }
 </style>
