@@ -48,10 +48,16 @@ if (xing) {
         {
           links.map((link) => (
             <li class="grid grid-cols-subgrid col-span-2 items-center">
-              <div class="rounded-full bg-white/50 flex items-center justify-center size-7">
-                <i class={link.icon} />
-              </div>
-              <a href={link.url} target="_blank" rel="noopener noreferrer">
+              <a
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="grid grid-cols-subgrid col-span-2"
+              >
+                <div class="rounded-full bg-white/50 flex items-center justify-center size-7">
+                  <i class={link.icon} />
+                </div>
+
                 {link.name}
               </a>
             </li>
