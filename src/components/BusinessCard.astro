@@ -1,4 +1,5 @@
 ---
+const picture = import.meta.env.PICTURE;
 const firstName = import.meta.env.FIRST_NAME;
 const lastName = import.meta.env.LAST_NAME;
 const title = import.meta.env.TITLE;
@@ -6,6 +7,7 @@ const company = import.meta.env.COMPANY;
 const email = import.meta.env.EMAIL;
 const linkedin = import.meta.env.LINKEDIN;
 const xing = import.meta.env.XING;
+const website = import.meta.env.WEBSITE;
 
 let links = [];
 
@@ -19,7 +21,7 @@ if (email) {
 
 if (linkedin) {
   links.push({
-    name: "LinkedIn",
+    name: extractPath(linkedin),
     icon: "fa-brands fa-linkedin",
     url: linkedin,
   });
@@ -27,24 +29,69 @@ if (linkedin) {
 
 if (xing) {
   links.push({
-    name: "Xing",
+    name: extractPath(xing),
     icon: "fa-brands fa-xing",
     url: xing,
   });
 }
+
+if (website) {
+  links.push({
+    name: extractDomain(website),
+    icon: "fa-solid fa-globe",
+    url: website,
+  });
+}
+
+function extractDomain(url: string) {
+  if (!url.startsWith("http")) {
+    url = "http://" + url;
+  }
+  const hostname = new URL(url).hostname;
+  let result = hostname.startsWith("www.") ? hostname.slice(4) : hostname;
+
+  if (result.endsWith("/") && result !== hostname) {
+    result = result.slice(0, -1);
+  }
+
+  return result;
+}
+
+function extractPath(url: string) {
+  if (!url.startsWith("http")) {
+    url = "http://" + url;
+  }
+  const u = new URL(url);
+  const hostname = u.hostname.startsWith("www.")
+    ? u.hostname.slice(4)
+    : u.hostname;
+  // Combine hostname + pathname
+  let result = u.pathname;
+  // Remove trailing /
+  if (result.endsWith("/") && result !== hostname) {
+    result = result.slice(0, -1);
+  }
+  return result;
+}
 ---
 
-<div class="card max-w-2xl bg-red-500 flex rounded-xl p-8 w-full">
+<div class="card max-w-2xl bg-red-500 flex rounded-lg p-8 w-full">
   <div class="glow"></div>
   <div class="flex gap-8 w-full self-center">
-    <div class="flex flex-col text-right">
-      <div>Bild</div>
-      <div class="text-lg font-bold">{firstName} {lastName}</div>
-      <div>{title}</div>
-      <div class="text-sm">{company}</div>
+    <div class="flex flex-col text-right grow gap-4">
+      <img
+        src={picture}
+        alt="Profile Picture"
+        class="rounded-full size-28 object-cover self-center"
+      />
+      <div class="self-center">
+        <div class="text-xl font-bold">{firstName} {lastName}</div>
+        <div>{title}</div>
+        <div class="text-sm italic">{company}</div>
+      </div>
     </div>
-    <div class="links flex items-center w-fit">
-      <ul class="grid grid-cols-[auto, 1fr] gap-1">
+    <div class="links flex items-center w-fit text-sm">
+      <ul class="grid grid-cols-[auto, 1fr] gap-x-1.5 gap-y-2.5">
         {
           links.map((link) => (
             <li class="grid grid-cols-subgrid col-span-2 items-center">
@@ -52,9 +99,9 @@ if (xing) {
                 href={link.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="grid grid-cols-subgrid col-span-2"
+                class="grid grid-cols-subgrid col-span-2 items-center"
               >
-                <div class="rounded-full bg-white/50 flex items-center justify-center size-7">
+                <div class="rounded-full bg-black/50 flex items-center justify-center size-7 text-white">
                   <i class={link.icon} />
                 </div>
 
