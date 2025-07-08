@@ -181,12 +181,20 @@ function extractPath(url: string) {
 </script>
 
 <style>
+  img {
+    transition: transform 250ms ease-in-out;
+  }
+
+  img:hover() {
+    transform: scale(1.05);
+  }
+
   .card {
     position: relative;
 
-    transition-duration: 300ms;
+    transition-duration: 250ms;
     transition-property: transform, box-shadow;
-    transition-timing-function: ease-out;
+    transition-timing-function: ease-in-out;
     box-shadow: 0 1px 5px #00000099;
   }
 
